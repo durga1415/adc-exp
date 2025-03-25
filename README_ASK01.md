@@ -1,10 +1,11 @@
 EX -01 SIMULATION OF AMPLITUDE SHIFT KEYING 
-AIM :
+
+#AIM :
   To implement ASK.FSK,BPSK using MATLAB.
-software requried :
+##software requried :
    MATLAB
 
-PROGRAM:
+#PROGRAM:
 % Amplitude Shift Keying (ASK) Simulation in MATLAB
 
 % Parameters
