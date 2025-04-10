@@ -1,0 +1,105 @@
+EXPT   NO.	:		COMMUNICATION LINK SIMULATION
+DATE		:
+
+AIM: 
+To implement Communication link Simulation  using MATLAB.
+
+SOFTWARE REQUIRED:
+	MATLAB
+PROGRAM
+COMMUNICATION LINK SIMULATION
+clc;
+clear;
+close all;
+
+% Simulation Parameters
+N = 10; % Number of bits
+Tb = 1; % Bit duration
+fs = 100; % Sampling frequency
+t = 0:1/fs:Tb-1/fs; % Time vector for one bit
+fc = 5; % Carrier frequency (Hz)
+
+% Generate random binary sequence
+bitStream = randi([0 1], 1, N);
+digitalSignal = repelem(bitStream, length(t)); % Digital signal for plotting
+
+% Carrier Signal
+carrier = cos(2 * pi * fc * t); % Sinusoidal carrier for one bit
+
+% BPSK Modulation
+bpskSignal = [];
+for i = 1:N
+    if bitStream(i) == 1
+        modulatedBit = carrier;  % No phase shift for '1'
+    else
+        modulatedBit = -carrier; % Phase shift 180° for '0'
+    end
+    bpskSignal = [bpskSignal modulatedBit]; % Append modulated signal
+end
+
+% Additive White Gaussian Noise (Manual Implementation)
+SNR_dB = 5; % Signal-to-Noise Ratio in dB
+SNR_linear = 10^(SNR_dB/10); % Convert dB to linear scale
+signalPower = mean(bpskSignal.^2); % Calculate signal power
+noisePower = signalPower / SNR_linear; % Calculate noise power
+noise = sqrt(noisePower) * randn(size(bpskSignal)); % Generate noise
+bpskNoisy = bpskSignal + noise; % Add noise
+
+% BPSK Demodulation
+receivedBits = [];
+for i = 1:N
+    receivedSegment = bpskNoisy((i-1)*length(t) + (1:length(t))); % Extract bit period
+    correlation = sum(receivedSegment .* carrier); % Correlation with carrier
+    receivedBits = [receivedBits (correlation > 0)]; % Decision rule
+end
+
+% Error Removal (Bit Correction)
+correctedBits = receivedBits; % (For simple BPSK, decision-based correction)
+
+% Plot Results
+figure;
+subplot(5,1,1);
+stairs([digitalSignal digitalSignal(end)], 'LineWidth', 2);
+ylim([-0.5 1.5]);
+title('Digital Signal');
+ylabel('Amplitude');
+grid on;
+
+subplot(5,1,2);
+plot(t, carrier, 'r', 'LineWidth', 2);
+title('Carrier Signal');
+ylabel('Amplitude');
+grid on;
+
+subplot(5,1,3);
+plot(bpskSignal, 'b', 'LineWidth', 2);
+title('BPSK Modulated Signal');
+ylabel('Amplitude');
+grid on;
+
+subplot(5,1,4);
+plot(bpskNoisy, 'k', 'LineWidth', 2);
+title('Received Signal with Noise');
+ylabel('Amplitude');
+grid on;
+
+subplot(5,1,5);
+stairs([correctedBits correctedBits(end)], 'g', 'LineWidth', 2);
+ylim([-0.5 1.5]);
+title('Demodulated Signal (Error Removed)');
+ylabel('Amplitude');
+xlabel('Time');
+grid on;
+
+
+
+OUTPUT
+
+
+
+
+
+
+
+RESULT
+	Thus Communication link Simulation  are performed using MATLAB.
